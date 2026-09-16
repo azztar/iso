@@ -97,7 +97,12 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const addDocument = (doc: Document) => {
-    setDocuments(prevDocs => [doc, ...prevDocs]);
+    setDocuments(prevDocs => {
+      if (prevDocs.some(d => d.id === doc.id || (d.codigo && d.codigo.trim().toLowerCase() === doc.codigo.trim().toLowerCase()))) {
+        return prevDocs;
+      }
+      return [doc, ...prevDocs];
+    });
   };
 
   const addKPI = async (kpiData: Omit<KPI, 'id' | 'responsableNombre'>) => {

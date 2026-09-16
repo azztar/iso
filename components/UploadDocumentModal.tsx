@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { DocumentType } from '../types';
-import { X, UploadCloud } from 'lucide-react';
+import { X, UploadCloud, Loader2 } from 'lucide-react';
 
 interface UploadDocumentModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onUpload: (data: { nombre: string; codigo: string; tipo: DocumentType; }) => void;
+  onUpload: (data: { nombre: string; codigo: string; tipo: DocumentType; }) => Promise<void> | void;
   defaultType?: DocumentType;
 }
 
@@ -15,6 +15,7 @@ const UploadDocumentModal: React.FC<UploadDocumentModalProps> = ({ isOpen, onClo
   const [tipo, setTipo] = useState<DocumentType>(DocumentType.PROCEDIMIENTO);
   const [fileName, setFileName] = useState('');
   const [error, setError] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
     if(defaultType) {
@@ -28,26 +29,36 @@ const UploadDocumentModal: React.FC<UploadDocumentModalProps> = ({ isOpen, onClo
     setTipo(defaultType || DocumentType.PROCEDIMIENTO);
     setFileName('');
     setError('');
+    setIsSubmitting(false);
   }
 
   const handleClose = () => {
+    if (isSubmitting) return;
     clearForm();
     onClose();
   }
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (isSubmitting) return;
     if (!nombre || !codigo || !fileName) {
         setError("Por favor, complete todos los campos y seleccione un archivo.");
         return;
     }
     setError('');
-    onUpload({
-        nombre,
-        codigo,
-        tipo,
-    });
-    handleClose();
+    setIsSubmitting(true);
+    try {
+      await onUpload({
+          nombre,
+          codigo,
+          tipo,
+      });
+      clearForm();
+      onClose();
+    } catch (err: any) {
+      setError(err?.message || "Error al subir el documento.");
+      setIsSubmitting(false);
+    }
   };
   
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -113,11 +124,27 @@ const UploadDocumentModal: React.FC<UploadDocumentModalProps> = ({ isOpen, onClo
             {error && <p className="text-sm text-red-600">{error}</p>}
           </div>
           <div className="px-6 py-4 bg-gray-50 rounded-b-lg flex justify-end space-x-3">
-            <button type="button" onClick={handleClose} className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-primary">
+            <button 
+              type="button" 
+              onClick={handleClose} 
+              disabled={isSubmitting}
+              className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-primary disabled:opacity-50"
+            >
               Cancelar
             </button>
-            <button type="submit" className="px-4 py-2 text-sm font-medium text-white bg-brand-primary border border-transparent rounded-md shadow-sm hover:bg-brand-secondary focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-primary">
-              Subir Documento
+            <button 
+              type="submit" 
+              disabled={isSubmitting}
+              className="px-4 py-2 text-sm font-medium text-white bg-brand-primary border border-transparent rounded-md shadow-sm hover:bg-brand-secondary focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-primary disabled:opacity-50 flex items-center gap-2"
+            >
+              {isSubmitting ? (
+                <>
+                  <Loader2 size={16} className="animate-spin" />
+                  Subiendo...
+                </>
+              ) : (
+                'Subir Documento'
+              )}
             </button>
           </div>
         </form>

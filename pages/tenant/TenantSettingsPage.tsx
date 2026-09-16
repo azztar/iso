@@ -86,6 +86,13 @@ const TenantSettingsPage: React.FC = () => {
   const handleAddUser = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!tenant || !user) return;
+    
+    // Enforce Plan limit
+    if (tenantUsers.length >= tenant.userLimit) {
+      setAddUserError(`Has alcanzado el límite máximo de ${tenant.userLimit} usuarios asignados por el SuperAdministrador para tu Plan ${tenant.planNombre}.`);
+      return;
+    }
+
     if (!newUserName.trim() || !newUserEmail.trim()) {
       setAddUserError('Por favor complete todos los campos');
       return;
@@ -103,12 +110,10 @@ const TenantSettingsPage: React.FC = () => {
       setNewUserName('');
       setNewUserEmail('');
       setShowAddUser(false);
-      if (tenant) {
-        setTenant({ ...tenant, userCount: tenant.userCount + 1 });
-      }
-    } catch (err) {
+      setTenant({ ...tenant, userCount: tenant.userCount + 1 });
+    } catch (err: any) {
       console.error(err);
-      setAddUserError('Error al crear el usuario');
+      setAddUserError(err?.message || 'Error al crear el usuario');
     } finally {
       setIsAddingUser(false);
     }
@@ -283,14 +288,32 @@ const TenantSettingsPage: React.FC = () => {
               <p className="text-xs text-gray-500">Usuarios asignados con acceso al sistema de gestión de calidad.</p>
             </div>
           </div>
-          <button
-            onClick={() => setShowAddUser(!showAddUser)}
-            className="px-3.5 py-1.5 text-sm font-medium text-white bg-brand-primary hover:bg-brand-secondary rounded-lg flex items-center shadow-sm"
-          >
-            <UserPlus size={16} className="mr-2" />
-            {showAddUser ? 'Cancelar' : 'Agregar Usuario'}
-          </button>
+          {tenant && tenantUsers.length >= tenant.userLimit ? (
+            <span className="px-3 py-1.5 text-xs font-semibold text-amber-800 bg-amber-100 border border-amber-300 rounded-lg flex items-center">
+              <AlertCircle size={15} className="mr-1.5 text-amber-700" />
+              Límite de Plan Alcanzado ({tenantUsers.length}/{tenant.userLimit})
+            </span>
+          ) : (
+            <button
+              onClick={() => setShowAddUser(!showAddUser)}
+              className="px-3.5 py-1.5 text-sm font-medium text-white bg-brand-primary hover:bg-brand-secondary rounded-lg flex items-center shadow-sm"
+            >
+              <UserPlus size={16} className="mr-2" />
+              {showAddUser ? 'Cancelar' : 'Agregar Usuario'}
+            </button>
+          )}
         </div>
+
+        {tenant && tenantUsers.length >= tenant.userLimit && (
+          <div className="p-4 bg-amber-50 border-b border-amber-200 flex items-center justify-between text-amber-800 text-xs">
+            <div className="flex items-center gap-2">
+              <AlertCircle size={16} className="text-amber-600 flex-shrink-0" />
+              <span>
+                <strong>Cupo de usuarios completo:</strong> Tu empresa tiene asignado el <strong>Plan {tenant.planNombre}</strong> con un tope de <strong>{tenant.userLimit} usuarios</strong> fijado por el SuperAdministrador. Si necesitas más accesos, contacta a soporte para escalar a un plan superior.
+              </span>
+            </div>
+          </div>
+        )}
 
         {/* Add User Drawer / Section */}
         {showAddUser && (

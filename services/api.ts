@@ -45,25 +45,175 @@ const users: User[] = [
 ];
 
 let documents: Document[] = [
-    { id: 'doc-1', codigo: 'MAN-EST-001', nombre: 'Manual de Calidad', proceso: ProcessType.ESTRATEGICO, tipo: DocumentType.MANUAL, version: 2, estado: DocumentStatus.VIGENTE, responsableId: 'user-admin', responsableNombre: 'Admin Acme', fechaEmision: '2023-01-15', fechaRevision: '2024-01-10', archivoUrl: '#', vinculos: { kpiIds: ['kpi-1'] }, historial: [
-        { id: 'hist-1-2', fecha: '2024-01-10T10:00:00Z', autor: 'Admin Acme', version: 2, cambios: 'Versión 2 publicada.'},
+    // 1. PROCESO ESTRATÉGICO
+    { id: 'doc-1', codigo: 'MAN-EST-001', nombre: 'Manual del Sistema de Gestión de Calidad', proceso: ProcessType.ESTRATEGICO, tipo: DocumentType.MANUAL, version: 2, estado: DocumentStatus.VIGENTE, responsableId: 'user-admin', responsableNombre: 'Admin Acme', fechaEmision: '2023-01-15', fechaRevision: '2024-01-10', archivoUrl: '#', vinculos: { kpiIds: ['kpi-1', 'kpi-2'] }, historial: [
+        { id: 'hist-1-2', fecha: '2024-01-10T10:00:00Z', autor: 'Admin Acme', version: 2, cambios: 'Versión 2 actualizada según auditoría anual.'},
         { id: 'hist-1-1', fecha: '2023-01-15T09:00:00Z', autor: 'Admin Acme', version: 1, cambios: 'Documento Creado.'},
     ]},
-    { id: 'doc-2', codigo: 'PROC-EST-002', nombre: 'Procedimiento de Planificación', proceso: ProcessType.ESTRATEGICO, tipo: DocumentType.PROCEDIMIENTO, version: 1, estado: DocumentStatus.VIGENTE, responsableId: 'user-editor', responsableNombre: 'Editor Acme', fechaEmision: '2023-03-20', fechaRevision: '2024-03-25', archivoUrl: '#', historial: [
-        { id: 'hist-2-2', fecha: '2023-03-22T11:00:00Z', autor: 'Admin Acme', version: 1, cambios: 'Documento aprobado y publicado.'},
-        { id: 'hist-2-1', fecha: '2023-03-20T14:00:00Z', autor: 'Editor Acme', version: 1, cambios: 'Documento enviado a revisión.'},
-    ]},
-    { id: 'doc-3', codigo: 'PROC-MIS-001', nombre: 'Procedimiento de Ventas', proceso: ProcessType.MISIONAL, tipo: DocumentType.PROCEDIMIENTO, version: 3, estado: DocumentStatus.VIGENTE, responsableId: 'user-admin', responsableNombre: 'Admin Acme', fechaEmision: '2022-11-05', fechaRevision: '2024-02-15', archivoUrl: '#', vinculos: { kpiIds: ['kpi-2', 'kpi-1'] }, historial: [] },
-    { id: 'doc-4', codigo: 'FOR-MIS-002', nombre: 'Cotización de Servicios', proceso: ProcessType.MISIONAL, tipo: DocumentType.FORMATO, version: 4, estado: DocumentStatus.BORRADOR, responsableId: 'user-editor', responsableNombre: 'Editor Acme', fechaEmision: '2024-04-01', fechaRevision: '2024-04-01', archivoUrl: '#', vinculos: { formId: 'cot-1', formType: 'Cotizacion' }, historial: [] },
-    { id: 'doc-5', codigo: 'POL-APO-001', nombre: 'Política de Recursos Humanos', proceso: ProcessType.APOYO, subproceso: 'Gestión Humana', tipo: DocumentType.POLITICA, version: 1, estado: DocumentStatus.OBSOLETO, responsableId: 'user-admin', responsableNombre: 'Admin Acme', fechaEmision: '2021-06-01', fechaRevision: '2023-06-01', archivoUrl: '#', historial: [] },
-    { id: 'doc-6', codigo: 'ACTA-CON-001', nombre: 'Acta de Revisión por Dirección', proceso: ProcessType.CONTROL, tipo: DocumentType.ACTA, version: 1, estado: DocumentStatus.APROBADO, responsableId: 'user-admin', responsableNombre: 'Admin Acme', fechaEmision: '2024-01-30', fechaRevision: '2024-01-30', archivoUrl: '#', historial: [] },
-    { id: 'doc-7', codigo: 'FOR-APO-DOT-0001', nombre: 'Registro de Entrega de Dotación y EPP', proceso: ProcessType.APOYO, subproceso: 'Gestión Humana', tipo: DocumentType.FORMATO, version: 1, estado: DocumentStatus.VIGENTE, responsableId: 'user-admin', responsableNombre: 'Admin Acme', fechaEmision: '2024-03-15', fechaRevision: '2025-03-15', archivoUrl: '#', vinculos: { formId: 'dot-1', formType: 'Dotacion' }, historial: [] },
+    { id: 'doc-est-2', codigo: 'POL-EST-001', nombre: 'Política de Calidad y Objetivos Corporativos', proceso: ProcessType.ESTRATEGICO, tipo: DocumentType.POLITICA, version: 1, estado: DocumentStatus.VIGENTE, responsableId: 'user-admin', responsableNombre: 'Admin Acme', fechaEmision: '2023-02-01', fechaRevision: '2024-02-01', archivoUrl: '#', historial: [] },
+    { id: 'doc-est-3', codigo: 'PROC-EST-002', nombre: 'Procedimiento de Planificación y Gestión del Riesgo', proceso: ProcessType.ESTRATEGICO, tipo: DocumentType.PROCEDIMIENTO, version: 1, estado: DocumentStatus.VIGENTE, responsableId: 'user-editor', responsableNombre: 'Editor Acme', fechaEmision: '2023-03-20', fechaRevision: '2024-03-25', archivoUrl: '#', historial: [] },
+    { id: 'doc-est-4', codigo: 'FOR-EST-001', nombre: 'Matriz de Partes Interesadas y Contexto ISO 9001', proceso: ProcessType.ESTRATEGICO, tipo: DocumentType.FORMATO, version: 1, estado: DocumentStatus.VIGENTE, responsableId: 'user-admin', responsableNombre: 'Admin Acme', fechaEmision: '2023-04-10', fechaRevision: '2024-04-10', archivoUrl: '#', historial: [] },
+
+    // 2. PROCESO MISIONAL (OPERATIVO)
+    { id: 'doc-3', codigo: 'PROC-MIS-001', nombre: 'Procedimiento de Ventas y Atención al Cliente', proceso: ProcessType.MISIONAL, tipo: DocumentType.PROCEDIMIENTO, version: 3, estado: DocumentStatus.VIGENTE, responsableId: 'user-admin', responsableNombre: 'Admin Acme', fechaEmision: '2022-11-05', fechaRevision: '2024-02-15', archivoUrl: '#', vinculos: { kpiIds: ['kpi-3', 'kpi-4'] }, historial: [] },
+    { id: 'doc-4', codigo: 'FOR-MIS-COT-0001', nombre: 'Cotización Comercial de Servicios Especializados', proceso: ProcessType.MISIONAL, tipo: DocumentType.FORMATO, version: 1, estado: DocumentStatus.VIGENTE, responsableId: 'user-editor', responsableNombre: 'Editor Acme', fechaEmision: '2024-04-01', fechaRevision: '2024-04-01', archivoUrl: '#', vinculos: { formId: 'cot-1', formType: 'Cotizacion' }, historial: [] },
+    { id: 'doc-mis-3', codigo: 'INS-MIS-001', nombre: 'Instructivo Operativo de Prestación de Servicios', proceso: ProcessType.MISIONAL, tipo: DocumentType.INSTRUCTIVO, version: 2, estado: DocumentStatus.VIGENTE, responsableId: 'user-editor', responsableNombre: 'Editor Acme', fechaEmision: '2023-05-12', fechaRevision: '2024-05-12', archivoUrl: '#', historial: [] },
+    { id: 'doc-mis-4', codigo: 'FOR-MIS-002', nombre: 'Ficha Técnica de Control de Calidad en Operaciones', proceso: ProcessType.MISIONAL, tipo: DocumentType.FORMATO, version: 1, estado: DocumentStatus.BORRADOR, responsableId: 'user-editor', responsableNombre: 'Editor Acme', fechaEmision: '2024-03-01', fechaRevision: '2024-03-01', archivoUrl: '#', historial: [] },
+
+    // 3. PROCESO DE APOYO (SOPORTE)
+    { id: 'doc-5', codigo: 'POL-APO-001', nombre: 'Política de Gestión Humana y Bienestar', proceso: ProcessType.APOYO, subproceso: 'Gestión Humana', tipo: DocumentType.POLITICA, version: 1, estado: DocumentStatus.VIGENTE, responsableId: 'user-admin', responsableNombre: 'Admin Acme', fechaEmision: '2023-06-01', fechaRevision: '2024-06-01', archivoUrl: '#', historial: [] },
+    { id: 'doc-7', codigo: 'FOR-APO-DOT-0001', nombre: 'Registro de Entrega de Dotación y Elementos de Protección Personal', proceso: ProcessType.APOYO, subproceso: 'Gestión Humana', tipo: DocumentType.FORMATO, version: 1, estado: DocumentStatus.VIGENTE, responsableId: 'user-admin', responsableNombre: 'Admin Acme', fechaEmision: '2024-03-15', fechaRevision: '2025-03-15', archivoUrl: '#', vinculos: { formId: 'dot-1', formType: 'Dotacion' }, historial: [] },
+    { id: 'doc-apo-3', codigo: 'PROC-APO-002', nombre: 'Procedimiento de Selección, Inducción y Capacitación', proceso: ProcessType.APOYO, subproceso: 'Gestión Humana', tipo: DocumentType.PROCEDIMIENTO, version: 2, estado: DocumentStatus.VIGENTE, responsableId: 'user-editor', responsableNombre: 'Editor Acme', fechaEmision: '2023-07-10', fechaRevision: '2024-07-10', archivoUrl: '#', historial: [] },
+    { id: 'doc-apo-4', codigo: 'PROC-APO-COM-001', nombre: 'Procedimiento de Compras y Selección de Proveedores', proceso: ProcessType.APOYO, subproceso: 'Compras', tipo: DocumentType.PROCEDIMIENTO, version: 1, estado: DocumentStatus.VIGENTE, responsableId: 'user-admin', responsableNombre: 'Admin Acme', fechaEmision: '2023-08-01', fechaRevision: '2024-08-01', archivoUrl: '#', historial: [] },
+    { id: 'doc-apo-5', codigo: 'FOR-APO-OC-0001', nombre: 'Orden de Compra de Insumos y Dotación', proceso: ProcessType.APOYO, subproceso: 'Compras', tipo: DocumentType.FORMATO, version: 1, estado: DocumentStatus.VIGENTE, responsableId: 'user-editor', responsableNombre: 'Editor Acme', fechaEmision: '2024-02-20', fechaRevision: '2024-02-20', archivoUrl: '#', historial: [] },
+    { id: 'doc-apo-6', codigo: 'PROC-APO-INF-001', nombre: 'Procedimiento de Mantenimiento Preventivo de Equipos', proceso: ProcessType.APOYO, subproceso: 'Infraestructura', tipo: DocumentType.PROCEDIMIENTO, version: 1, estado: DocumentStatus.VIGENTE, responsableId: 'user-admin', responsableNombre: 'Admin Acme', fechaEmision: '2023-09-15', fechaRevision: '2024-09-15', archivoUrl: '#', historial: [] },
+
+    // 4. PROCESO DE CONTROL Y EVALUACIÓN
+    { id: 'doc-6', codigo: 'ACTA-CON-001', nombre: 'Acta de Revisión Anual por la Dirección', proceso: ProcessType.CONTROL, tipo: DocumentType.ACTA, version: 1, estado: DocumentStatus.VIGENTE, responsableId: 'user-admin', responsableNombre: 'Admin Acme', fechaEmision: '2024-01-30', fechaRevision: '2024-01-30', archivoUrl: '#', historial: [] },
+    { id: 'doc-con-2', codigo: 'PROC-CON-001', nombre: 'Procedimiento de Auditorías Internas de Calidad', proceso: ProcessType.CONTROL, tipo: DocumentType.PROCEDIMIENTO, version: 2, estado: DocumentStatus.VIGENTE, responsableId: 'user-admin', responsableNombre: 'Admin Acme', fechaEmision: '2023-02-10', fechaRevision: '2024-02-10', archivoUrl: '#', historial: [] },
+    { id: 'doc-con-3', codigo: 'PROG-CON-001', nombre: 'Programa Anual de Auditorías de Calidad ISO 9001', proceso: ProcessType.CONTROL, tipo: DocumentType.FORMATO, version: 1, estado: DocumentStatus.VIGENTE, responsableId: 'user-admin', responsableNombre: 'Admin Acme', fechaEmision: '2024-01-05', fechaRevision: '2024-01-05', archivoUrl: '#', historial: [] },
+    { id: 'doc-con-4', codigo: 'FOR-CON-002', nombre: 'Registro de No Conformidades y Acciones Correctivas (CAPA)', proceso: ProcessType.CONTROL, tipo: DocumentType.FORMATO, version: 2, estado: DocumentStatus.VIGENTE, responsableId: 'user-editor', responsableNombre: 'Editor Acme', fechaEmision: '2024-03-10', fechaRevision: '2024-03-10', archivoUrl: '#', historial: [] },
 ];
 
-const kpis: KPI[] = [
-    { id: 'kpi-1', nombre: 'Satisfacción del Cliente', unidad: '%', meta: 95, periodicidad: 'Anual', proceso: ProcessType.ESTRATEGICO, responsableId: 'user-admin', responsableNombre: 'Admin Acme' },
-    { id: 'kpi-2', nombre: 'Tasa de Cierre de Ventas', unidad: '%', meta: 25, periodicidad: 'Mensual', proceso: ProcessType.MISIONAL, responsableId: 'user-editor', responsableNombre: 'Editor Acme' },
-    { id: 'kpi-3', nombre: 'Rotación de Personal', unidad: '%', meta: 5, periodicidad: 'Anual', proceso: ProcessType.APOYO, subproceso: 'Gestión Humana', responsableId: 'user-admin', responsableNombre: 'Admin Acme' },
+let kpis: KPI[] = [
+    // Estratégico
+    { 
+      id: 'kpi-1', 
+      nombre: 'Satisfacción Global del Cliente', 
+      unidad: '%', 
+      meta: 95, 
+      valorActual: 93,
+      formula: '(Puntajes de Encuesta >= 4 sobre 5 / Total Encuestas) * 100',
+      tendencia: 'subiendo',
+      periodicidad: 'Mensual', 
+      proceso: ProcessType.ESTRATEGICO, 
+      responsableId: 'user-admin', 
+      responsableNombre: 'Admin Acme' 
+    },
+    { 
+      id: 'kpi-2', 
+      nombre: 'Eficacia de Objetivos Corporativos de Calidad', 
+      unidad: '%', 
+      meta: 90, 
+      valorActual: 91,
+      formula: '(Objetivos de Calidad Alcanzados / Total Objetivos Planteados) * 100',
+      tendencia: 'estable',
+      periodicidad: 'Anual', 
+      proceso: ProcessType.ESTRATEGICO, 
+      responsableId: 'user-admin', 
+      responsableNombre: 'Admin Acme' 
+    },
+    // Misional
+    { 
+      id: 'kpi-3', 
+      nombre: 'Tasa de Conversión de Cotizaciones a Ventas', 
+      unidad: '%', 
+      meta: 30, 
+      valorActual: 28,
+      formula: '(Cotizaciones Ganadas / Total Cotizaciones Presentadas) * 100',
+      tendencia: 'subiendo',
+      periodicidad: 'Mensual', 
+      proceso: ProcessType.MISIONAL, 
+      responsableId: 'user-editor', 
+      responsableNombre: 'Editor Acme' 
+    },
+    { 
+      id: 'kpi-4', 
+      nombre: 'Cumplimiento de Entregas a Tiempo (OTIF)', 
+      unidad: '%', 
+      meta: 98, 
+      valorActual: 96,
+      formula: '(Servicios Entregados a Tiempo y en Conformidad / Total Servicios) * 100',
+      tendencia: 'estable',
+      periodicidad: 'Mensual', 
+      proceso: ProcessType.MISIONAL, 
+      responsableId: 'user-editor', 
+      responsableNombre: 'Editor Acme' 
+    },
+    // Apoyo
+    { 
+      id: 'kpi-5', 
+      nombre: 'Índice de Retención del Personal Clave', 
+      unidad: '%', 
+      meta: 95, 
+      valorActual: 96,
+      formula: '100 - ((Retiros Voluntarios / Promedio de Colaboradores) * 100)',
+      tendencia: 'estable',
+      periodicidad: 'Anual', 
+      proceso: ProcessType.APOYO, 
+      subproceso: 'Gestión Humana', 
+      responsableId: 'user-admin', 
+      responsableNombre: 'Admin Acme' 
+    },
+    { 
+      id: 'kpi-6', 
+      nombre: 'Cobertura del Plan de Capacitación', 
+      unidad: '%', 
+      meta: 85, 
+      valorActual: 88,
+      formula: '(Horas de Capacitación Impartidas / Horas Programadas) * 100',
+      tendencia: 'subiendo',
+      periodicidad: 'Mensual', 
+      proceso: ProcessType.APOYO, 
+      subproceso: 'Gestión Humana', 
+      responsableId: 'user-editor', 
+      responsableNombre: 'Editor Acme' 
+    },
+    { 
+      id: 'kpi-7', 
+      nombre: 'Desempeño y Calidad de Proveedores Críticos', 
+      unidad: '%', 
+      meta: 90, 
+      valorActual: 92,
+      formula: '(Pedidos de Proveedores Conformes / Total Pedidos Recibidos) * 100',
+      tendencia: 'subiendo',
+      periodicidad: 'Mensual', 
+      proceso: ProcessType.APOYO, 
+      subproceso: 'Compras', 
+      responsableId: 'user-admin', 
+      responsableNombre: 'Admin Acme' 
+    },
+    { 
+      id: 'kpi-8', 
+      nombre: 'Disponibilidad Operativa de Equipos e Infraestructura', 
+      unidad: '%', 
+      meta: 95, 
+      valorActual: 91,
+      formula: '(Horas Efectivas de Operación / Horas Totales Programadas) * 100',
+      tendencia: 'estable',
+      periodicidad: 'Mensual', 
+      proceso: ProcessType.APOYO, 
+      subproceso: 'Infraestructura', 
+      responsableId: 'user-admin', 
+      responsableNombre: 'Admin Acme' 
+    },
+    // Control
+    { 
+      id: 'kpi-9', 
+      nombre: 'Eficacia en el Cierre de No Conformidades (CAPA)', 
+      unidad: '%', 
+      meta: 90, 
+      valorActual: 84,
+      formula: '(Acciones Correctivas Cerradas Eficazmente / Total Acciones Abiertas) * 100',
+      tendencia: 'subiendo',
+      periodicidad: 'Mensual', 
+      proceso: ProcessType.CONTROL, 
+      responsableId: 'user-admin', 
+      responsableNombre: 'Admin Acme' 
+    },
+    { 
+      id: 'kpi-10', 
+      nombre: 'Cobertura del Programa Anual de Auditorías Internas', 
+      unidad: '%', 
+      meta: 100, 
+      valorActual: 100,
+      formula: '(Auditorías Internas Realizadas / Auditorías Planificadas) * 100',
+      tendencia: 'estable',
+      periodicidad: 'Anual', 
+      proceso: ProcessType.CONTROL, 
+      responsableId: 'user-admin', 
+      responsableNombre: 'Admin Acme' 
+    },
 ];
 
 const contactos: Contacto[] = [
@@ -222,6 +372,13 @@ export const api = {
         return Promise.reject(new Error("Usuario responsable no encontrado"));
     }
     
+    // Check for existing document with same code to prevent duplication
+    const existingIndex = documents.findIndex(d => d.codigo.trim().toLowerCase() === newDocData.codigo.trim().toLowerCase());
+    if (existingIndex !== -1) {
+      // Document already exists, return existing
+      return simulateDelay(documents[existingIndex]);
+    }
+
     const today = new Date().toISOString().split('T')[0];
     const newDocument: Document = {
       id: `doc-${Date.now()}`,
@@ -497,6 +654,20 @@ export const api = {
   },
 
   addTenantUser: (tenantId: string, userData: { email: string; nombre: string; roleName: string }, actor: User): Promise<User> => {
+    const tenant = tenants.find(t => t.id === tenantId);
+    if (!tenant) throw new Error("Organización (Tenant) no encontrada");
+
+    // Enforce Plan User Limit Quota!
+    const currentUsers = users.filter(u => u.tenantId === tenantId);
+    if (currentUsers.length >= tenant.userLimit) {
+      throw new Error(`Límite de plan alcanzado: Tu plan ${tenant.planNombre} solo permite hasta ${tenant.userLimit} usuarios. Solicita una ampliación de plan al SuperAdministrador.`);
+    }
+
+    // Check if email already exists
+    if (users.some(u => u.email.toLowerCase() === userData.email.toLowerCase())) {
+      throw new Error("Ya existe un usuario registrado con este correo electrónico.");
+    }
+
     const targetRole = roles.find(r => r.name === userData.roleName) || roles[2]; // Default to editor
     const newUser: User = {
       id: `user-${Date.now()}`,
@@ -509,12 +680,9 @@ export const api = {
     users.push(newUser);
 
     // Update tenant userCount
-    const tenant = tenants.find(t => t.id === tenantId);
-    if (tenant) {
-      tenant.userCount = users.filter(u => u.tenantId === tenantId).length;
-    }
+    tenant.userCount = users.filter(u => u.tenantId === tenantId).length;
 
-    logAuditEvent('USER_CREATE', `user:${newUser.email} en tenant:${tenantId}`, actor);
+    logAuditEvent('USER_CREATE', `user:${newUser.email} (${userData.roleName}) en tenant:${tenantId}`, actor);
     return simulateDelay(newUser);
   },
 

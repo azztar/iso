@@ -145,10 +145,9 @@ const DocumentList: React.FC = () => {
             tipo: currentDocumentType || data.tipo,
         }, user);
         addDocument(newDocument);
-        setUploadModalOpen(false);
     } catch(error) {
         console.error("Failed to upload document", error);
-        alert("Error al subir el archivo. Por favor, inténtelo de nuevo.");
+        throw error;
     }
   };
 

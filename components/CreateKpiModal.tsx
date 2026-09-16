@@ -23,6 +23,8 @@ const CreateKpiModal: React.FC<CreateKpiModalProps> = ({
   const [nombre, setNombre] = useState('');
   const [unidad, setUnidad] = useState('%');
   const [meta, setMeta] = useState<number>(90);
+  const [valorActual, setValorActual] = useState<number>(85);
+  const [formula, setFormula] = useState('');
   const [periodicidad, setPeriodicidad] = useState<'Diario' | 'Semanal' | 'Mensual' | 'Anual'>('Mensual');
   const [proceso, setProceso] = useState<ProcessType>(defaultProcess);
   const [subproceso, setSubproceso] = useState<string>(defaultSubproceso || '');
@@ -49,6 +51,8 @@ const CreateKpiModal: React.FC<CreateKpiModalProps> = ({
     setNombre('');
     setUnidad('%');
     setMeta(90);
+    setValorActual(85);
+    setFormula('');
     setPeriodicidad('Mensual');
     setError('');
   };
@@ -76,6 +80,9 @@ const CreateKpiModal: React.FC<CreateKpiModalProps> = ({
         nombre: nombre.trim(),
         unidad: unidad.trim(),
         meta: Number(meta),
+        valorActual: Number(valorActual),
+        formula: formula.trim() || undefined,
+        tendencia: valorActual >= meta ? 'subiendo' : 'estable',
         periodicidad,
         proceso,
         subproceso: proceso === ProcessType.APOYO ? (subproceso || 'Gestión Humana') : undefined,
@@ -134,6 +141,20 @@ const CreateKpiModal: React.FC<CreateKpiModalProps> = ({
                 />
               </div>
               <div>
+                <label className="block text-xs font-medium text-gray-700 mb-1">Resultado Medido Actual</label>
+                <input
+                  type="number"
+                  step="any"
+                  value={valorActual}
+                  onChange={e => setValorActual(parseFloat(e.target.value) || 0)}
+                  required
+                  className="w-full px-3 py-2 border rounded-lg text-sm focus:ring-brand-primary focus:border-brand-primary"
+                />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-2 gap-4">
+              <div>
                 <label className="block text-xs font-medium text-gray-700 mb-1">Unidad de Medida</label>
                 <input
                   type="text"
@@ -141,6 +162,16 @@ const CreateKpiModal: React.FC<CreateKpiModalProps> = ({
                   value={unidad}
                   onChange={e => setUnidad(e.target.value)}
                   required
+                  className="w-full px-3 py-2 border rounded-lg text-sm focus:ring-brand-primary focus:border-brand-primary"
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-medium text-gray-700 mb-1">Fórmula de Cálculo ISO</label>
+                <input
+                  type="text"
+                  placeholder="Ej: (Entregas a tiempo / Total) * 100"
+                  value={formula}
+                  onChange={e => setFormula(e.target.value)}
                   className="w-full px-3 py-2 border rounded-lg text-sm focus:ring-brand-primary focus:border-brand-primary"
                 />
               </div>

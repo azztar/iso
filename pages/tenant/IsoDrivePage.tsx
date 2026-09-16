@@ -4,6 +4,7 @@ import DocumentList from '../../components/DocumentList';
 import KpiList from '../../components/KpiList';
 import { ProcessType, DocumentType } from '../../types';
 import Breadcrumbs from '../../components/shared/Breadcrumbs';
+import ProcessHeaderBanner from '../../components/tenant/ProcessHeaderBanner';
 
 const IsoDrivePage: React.FC = () => {
     const params = useParams<{ processType: string, level2: string, level3: string, level4: string }>();
@@ -67,10 +68,13 @@ const IsoDrivePage: React.FC = () => {
         
         return <DocumentList />;
     };
+
+    const currentSubproceso = processType === ProcessType.APOYO && level2 ? decodeURIComponent(level2) : undefined;
     
     return (
         <div className="p-4 md:p-6 lg:p-8 h-full flex flex-col">
             <Breadcrumbs crumbs={crumbs} />
+            <ProcessHeaderBanner processType={processType as ProcessType} subproceso={currentSubproceso} />
             <div className="flex-1">
                 {renderContent()}
             </div>

@@ -186,6 +186,7 @@ export enum ProcessType {
 export enum DocumentType {
   MANUAL = 'Manual',
   PROCEDIMIENTO = 'Procedimiento',
+  INSTRUCTIVO = 'Instructivo',
   FORMATO = 'Formato',
   POLITICA = 'Política',
   ACTA = 'Acta',
@@ -234,6 +235,9 @@ export interface KPI {
     nombre: string;
     unidad: string;
     meta: number;
+    valorActual?: number;
+    formula?: string;
+    tendencia?: 'subiendo' | 'bajando' | 'estable';
     periodicidad: 'Diario' | 'Semanal' | 'Mensual' | 'Anual';
     proceso: ProcessType;
     subproceso?: string;
